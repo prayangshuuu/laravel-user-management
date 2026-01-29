@@ -66,9 +66,6 @@
                         </div>
                         <p class="text-xs font-bold text-gray-400">Your account is fully verified and operational.</p>
                     </div>
-                    <div class="mt-4 w-full bg-gray-200 h-3 border-2 border-black rounded-full overflow-hidden">
-                        <div class="bg-green-500 h-full w-full"></div>
-                    </div>
                 </div>
             </div>
 

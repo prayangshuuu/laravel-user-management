@@ -32,18 +32,10 @@
                             <a href="{{ route('dashboard') }}" class="text-black hover:text-blue-600 px-3 py-2 rounded-md text-sm font-bold uppercase transition">Dashboard</a>
                         @endif
 
-                        <div class="relative group">
-                            <button class="flex items-center space-x-1 text-black hover:text-blue-600 focus:outline-none font-bold">
-                                <span class="text-sm">{{ Auth::user()->name }}</span>
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] py-1 hidden group-hover:block z-50">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm font-bold text-black hover:bg-gray-100 uppercase">Log Out</button>
-                                </form>
-                            </div>
-                        </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="text-black hover:text-red-600 px-3 py-2 rounded-md text-sm font-bold uppercase transition">Log Out</button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="text-black hover:text-blue-600 px-3 py-2 rounded-md text-sm font-bold uppercase transition">Log in</a>
                         <a href="{{ route('register') }}" class="bg-blue-600 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none px-4 py-2 rounded-none text-sm font-bold uppercase transition">Register</a>

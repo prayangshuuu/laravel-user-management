@@ -75,7 +75,7 @@
                         <x-ui.icon name="users" class="w-6 h-6 text-green-700 group-hover:text-white" />
                     </div>
                 </div>
-                <h3 class="text-2xl font-black text-black uppercase tracking-tight mb-3">User Mgmt</h3>
+                <h3 class="text-2xl font-black text-black uppercase tracking-tight mb-3">User Management</h3>
                 <p class="font-bold text-gray-500">Full administrative capabilities to view, edit, and manage user accounts efficiently.</p>
             </div>
         </div>

@@ -4,25 +4,36 @@
 
 @section('content')
     <div class="flex justify-center items-center min-h-[calc(100vh-200px)]">
-        <div class="w-full max-w-md bg-white p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 class="text-3xl font-black mb-2 text-center text-black uppercase tracking-tight">Forgot Password</h2>
-            <p class="text-center text-gray-600 mb-8 text-sm font-medium">Enter your email and we'll send you a new password.</p>
+        <x-ui.card class="w-full max-w-md">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black text-black uppercase tracking-tight mb-2">Forgot Password</h2>
+                <p class="text-gray-600 font-medium">Enter your email and we'll send you a new password.</p>
+            </div>
 
             <form action="{{ route('forgot-password.send') }}" method="POST">
                 @csrf
-                <div class="mb-6">
-                    <label for="email" class="block text-sm font-bold text-black mb-2 uppercase">Email Address</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="w-full px-4 py-3 border-2 border-black focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all placeholder-gray-400" placeholder="name@example.com" required autofocus>
+
+                <div class="mb-8 relative">
+                    <label for="email" class="block text-sm font-black text-black mb-2 uppercase tracking-wide">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <input type="email" name="email" id="email" value="{{ old('email') }}" class="w-full pl-10 pr-4 py-3 border-2 border-black focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-bold placeholder-gray-400 bg-white" placeholder="name@example.com" required autofocus>
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all uppercase tracking-wide">
+                <x-ui.button type="submit" variant="primary" :fullWidth="true">
                     Send New Password
-                </button>
+                </x-ui.button>
             </form>
 
-            <p class="mt-8 text-center text-sm font-medium text-gray-600">
-                Remembered it? <a href="{{ route('login') }}" class="text-black font-bold hover:underline decoration-2 decoration-blue-600">Log in</a>
-            </p>
-        </div>
+            <div class="mt-8 pt-6 border-t-2 border-black text-center">
+                <p class="text-sm font-medium text-gray-600">
+                    Remembered it?
+                    <a href="{{ route('login') }}" class="text-black font-black hover:underline decoration-2 decoration-blue-600 ml-1">Log in</a>
+                </p>
+            </div>
+        </x-ui.card>
     </div>
 @endsection

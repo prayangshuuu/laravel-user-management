@@ -2,51 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NewPasswordMail;
-use App\Models\User;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\SendNewPasswordRequest;
+use App\Services\AuthService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showRegistrationForm()
+    protected AuthService $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
+    public function showRegistrationForm(): View
     {
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $this->authService->registerUser($request->validated());
 
         return redirect()->route('login')->with('success', 'Registration successful. Please login.');
     }
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->validated())) {
             $request->session()->regenerate();
 
             return redirect()->intended('dashboard');
@@ -57,7 +50,7 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 
@@ -67,24 +60,14 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function showForgotPasswordForm()
+    public function showForgotPasswordForm(): View
     {
         return view('auth.forgot-password');
     }
 
-    public function sendNewPassword(Request $request)
+    public function sendNewPassword(SendNewPasswordRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-        $newPassword = Str::random(10);
-
-        $user->password = Hash::make($newPassword);
-        $user->save();
-
-        Mail::to($user->email)->send(new NewPasswordMail($newPassword));
+        $this->authService->resetPassword($request->validated('email'));
 
         return back()->with('success', 'A new password has been sent to your email address.');
     }

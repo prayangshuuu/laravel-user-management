@@ -151,3 +151,57 @@ The following UI/UX elements have been audited and verified for consistency acro
 - **Thin Controllers**: Controllers act solely as traffic directors. They validate input using Form Requests and delegate business logic to Services, ensuring they remain lightweight and readable.
 - **Service Layer**: All complex business logic (e.g., user registration, password resets) is encapsulated in dedicated Service classes. This promotes reusability and keeps the core logic independent of the HTTP layer.
 - **Strict Eloquent ORM**: Database interactions are strictly handled via Eloquent Models. This ensures security, type safety, and maintainability by avoiding raw SQL queries.
+
+## Service-Layer Testing Strategy
+
+This project prioritizes testing the Service Layer to ensure business logic is robust, independent of the HTTP layer, and free from side effects.
+
+### Scope
+- **What to Test**:
+  - Core business logic (e.g., calculations, data transformations).
+  - Database interactions (creation, updates, deletions) via Eloquent.
+  - External service integrations (e.g., Mail sending).
+- **What NOT to Test**:
+  - HTTP redirects or responses (Controller responsibility).
+  - Form validation rules (Form Request responsibility).
+  - Blade view rendering.
+
+### Testing Approach
+
+1.  **Database Testing**:
+    - Use `RefreshDatabase` trait to ensure a clean state for every test.
+    - Assert against the database state to verify CRUD operations.
+
+2.  **Mocking**:
+    - Mock external services (like `Mail`) to prevent actual execution during tests.
+    - Do **not** mock Eloquent models unless absolutely necessary for performance; prefer real database assertions for accuracy.
+
+### Example Test Case (Pseudo-code)
+
+```php
+// tests/Unit/Services/AuthServiceTest.php
+
+class AuthServiceTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_it_registers_a_new_user()
+    {
+        // Arrange
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'password' => 'secret123',
+        ];
+        $service = new AuthService();
+
+        // Act
+        $user = $service->registerUser($data);
+
+        // Assert
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertDatabaseHas('users', ['email' => 'john@example.com']);
+        $this->assertTrue(Hash::check('secret123', $user->password));
+    }
+}
+```

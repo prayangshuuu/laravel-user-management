@@ -54,8 +54,8 @@
         <!-- Flash Messages -->
         @if (session('success'))
             <div class="mb-8 bg-green-100 border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
-                <div class="bg-green-500 text-white p-1 border-2 border-black rounded-full">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                <div class="bg-green-500 text-white p-1 border-2 border-black rounded-full flex-shrink-0">
+                    <x-ui.icon name="check" class="w-4 h-4" />
                 </div>
                 <p class="font-bold text-black">{{ session('success') }}</p>
             </div>
@@ -64,8 +64,8 @@
         @if ($errors->any())
             <div class="mb-8 bg-red-100 border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <div class="flex items-center gap-3 mb-2">
-                    <div class="bg-red-500 text-white p-1 border-2 border-black rounded-full">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <div class="bg-red-500 text-white p-1 border-2 border-black rounded-full flex-shrink-0">
+                        <x-ui.icon name="x" class="w-4 h-4" />
                     </div>
                     <h3 class="font-bold text-black uppercase">Error</h3>
                 </div>

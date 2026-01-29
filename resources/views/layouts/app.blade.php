@@ -86,10 +86,13 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t-2 border-black mt-auto">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-sm font-bold text-gray-500 uppercase tracking-wide">
-                &copy; {{ date('Y') }} User Management System. All rights reserved.
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm font-bold text-gray-500 uppercase tracking-wide">
+                &copy; {{ date('Y') }} Prayangshu, All rights reserved.
             </p>
+            <a href="https://prayangshu.com/" target="_blank" class="text-sm font-black text-black hover:text-blue-600 uppercase tracking-wide transition-colors">
+                prayangshu.com
+            </a>
         </div>
     </footer>
 

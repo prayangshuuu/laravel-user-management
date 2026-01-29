@@ -7,19 +7,86 @@
 
 # Laravel User Management System
 
-A robust user management system built with Laravel 12, featuring authentication, role-based access control, and administrative management capabilities. This project utilizes Blade templates and Tailwind CSS for the user interface.
+User Management System is a web-based application that manages user records and provides secure role-based access for users and administrators. Built with Laravel 12, it features a modern interface using Blade and Tailwind CSS (RetroUI) and ensures data integrity with a MySQL database.
 
-## Features
+## Project Requirements
+
+- **Project Name**: Laravel User Management System
+- **Database**: MySQL
+- **Backend**: Laravel 12 (Eloquent ORM)
+- **Frontend**: Blade Templates + Tailwind CSS (RetroUI Design System)
+- **Authentication**: Custom Laravel Auth with Sanctum for API
+
+## User Module
+
+This module handles all standard user interactions, ensuring a smooth and secure experience.
+
+- **User Registration**: New users can create an account to access the system.
+- **User Login**: Registered users can securely log in to their personal dashboard.
+- **Forgot Password**: Users can recover their account via an email-based password reset link (configured via SMTP/Gmail).
+
+## Admin Panel
+
+A dedicated control center for administrators to manage the application and its users.
+
+- **Admin Login**: Secure entry point for administrative access.
+- **Manage Users**: View a complete list of all registered users.
+- **Edit User Information**: Update user details such as name, email, and role.
+- **Delete Users**: Remove user accounts from the system permanently.
+- **Change Admin Password**: Administrators can securely update their own credentials.
+
+## How to Run the Project
+
+Follow these steps to set up the project on your local machine:
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/prayangshu/laravel-user-management.git
+    cd laravel-user-management
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    composer install
+    npm install
+    ```
+
+3.  **Configure environment**
+    Copy the example environment file and update your database and mail settings.
+    ```bash
+    cp .env.example .env
+    ```
+
+4.  **Generate application key**
+    ```bash
+    php artisan key:generate
+    ```
+
+5.  **Setup database**
+    Run migrations and seed the database with initial data.
+    ```bash
+    php artisan migrate --seed
+    ```
+
+6.  **Run the application**
+    Start the development server and compile assets.
+    ```bash
+    npm run build
+    php artisan serve
+    ```
+    Access the app at `http://localhost:8000`.
+
+---
+
+## Features (Detailed)
 
 ### User Registration
-Allows new users to create an account within the system.
 - **Functionality**: Validates user input (name, email, password), creates a new user record with the default 'user' role, hashes the password, and redirects to the login page upon success.
 - **Routes**:
   - `GET /register`: Displays the registration form.
   - `POST /register`: Handles the form submission and user creation.
 
 ### User Authentication
-Secure login and logout functionality for registered users.
 - **Functionality**: Authenticates users using email and password. Protects routes using the `auth` middleware. Handles session regeneration to prevent session fixation attacks.
 - **Routes**:
   - `GET /login`: Displays the login form.
@@ -27,26 +94,22 @@ Secure login and logout functionality for registered users.
   - `POST /logout`: Logs the user out and invalidates the session.
 
 ### Forgot Password
-A mechanism for users to reset their password via email.
 - **Functionality**: Accepts a user's email address, generates a random new password, updates the database, and sends the new password to the user via SMTP email.
 - **Routes**:
   - `GET /forgot-password`: Displays the email input form.
   - `POST /forgot-password`: Processes the request and sends the email.
 
 ### Role-Based Access Control
-Distinguishes between standard users and administrators.
 - **Functionality**: Adds a `role` column to the users table. Implements an `AdminMiddleware` to restrict access to administrative routes.
 - **Routes**:
   - Middleware `admin` applied to all `/admin/*` routes.
 
 ### Admin Dashboard
-A centralized hub for administrators to manage the application.
 - **Functionality**: Provides a protected view accessible only to users with the 'admin' role. Displays quick links to administrative tasks.
 - **Routes**:
   - `GET /admin`: Displays the admin dashboard.
 
 ### Admin User Management
-Full CRUD capabilities for administrators to manage registered users.
 - **Functionality**: Allows admins to view a list of all users, edit user details (name, email, role), and delete users from the system. Includes confirmation dialogs for destructive actions.
 - **Routes**:
   - `GET /admin/users`: Lists all users.
@@ -55,24 +118,12 @@ Full CRUD capabilities for administrators to manage registered users.
   - `DELETE /admin/users/{user}`: Removes the user from the database.
 
 ### Admin Password Change
-Allows administrators to securely update their own password.
 - **Functionality**: Validates the current password before allowing a change. Updates the password hash in the database upon successful validation.
 - **Routes**:
   - `GET /admin/password/change`: Displays the password change form.
   - `PUT /admin/password/change`: Handles the password update logic.
 
-## Installation
-
-1. Clone the repository.
-2. Run `composer install`.
-3. Copy `.env.example` to `.env` and configure your database and mail settings.
-4. Run `php artisan key:generate`.
-5. Run `php artisan migrate`.
-6. Serve the application using `php artisan serve`.
-
 ## UI Consistency Checklist
-
-The following UI/UX elements have been audited and verified for consistency across the application:
 
 - [x] **RetroUI Design System**: All pages utilize the Neo-Brutalism aesthetic with thick borders, hard shadows, and high contrast.
 - [x] **Typography**: Consistent use of the 'Inter' font family with uppercase headers and bold weights.
@@ -250,3 +301,144 @@ This application is designed to scale horizontally and vertically with minimal r
 ### API Considerations
 - **Rate Limiting**: Implement strict API rate limiting (using Laravel Sanctum or Throttle middleware) to prevent abuse and ensure fair usage.
 - **Pagination**: Enforce pagination on all list endpoints (e.g., `User::paginate()`) to prevent memory exhaustion when retrieving large datasets.
+
+## REST API Documentation
+
+The application provides a RESTful API for external integrations. The API uses Laravel Sanctum for authentication and follows standard HTTP status codes.
+
+### Authentication
+
+All API requests (except login) require a Bearer Token in the `Authorization` header.
+
+**Header:**
+`Authorization: Bearer <your-token>`
+
+### Endpoints
+
+#### 1. Login
+Authenticates a user and returns an access token.
+
+- **URL**: `POST /api/login`
+- **Auth**: None
+- **Body**:
+  ```json
+  {
+    "email": "admin@example.com",
+    "password": "password"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Login successful.",
+    "data": {
+      "user": {
+        "id": 1,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "role": "admin",
+        "created_at": "2023-10-27T10:00:00+00:00",
+        "updated_at": "2023-10-27T10:00:00+00:00"
+      },
+      "token": "1|laravel_sanctum_token_string..."
+    }
+  }
+  ```
+
+#### 2. Logout
+Revokes the current access token.
+
+- **URL**: `POST /api/logout`
+- **Auth**: Bearer Token
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Logged out successfully.",
+    "data": null
+  }
+  ```
+
+#### 3. Get Current User
+Retrieves the authenticated user's profile.
+
+- **URL**: `GET /api/user`
+- **Auth**: Bearer Token
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Success",
+    "data": {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "role": "admin",
+      ...
+    }
+  }
+  ```
+
+#### 4. List Users (Admin Only)
+Retrieves a list of all registered users.
+
+- **URL**: `GET /api/admin/users`
+- **Auth**: Bearer Token (Admin Role Required)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Success",
+    "data": [
+      {
+        "id": 2,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "user",
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+
+#### 5. Update User (Admin Only)
+Updates a user's details.
+
+- **URL**: `PUT /api/admin/users/{id}`
+- **Auth**: Bearer Token (Admin Role Required)
+- **Body**:
+  ```json
+  {
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "role": "user"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "User updated successfully.",
+    "data": {
+      "id": 2,
+      "name": "Jane Doe",
+      ...
+    }
+  }
+  ```
+
+#### 6. Delete User (Admin Only)
+Removes a user from the system.
+
+- **URL**: `DELETE /api/admin/users/{id}`
+- **Auth**: Bearer Token (Admin Role Required)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "User deleted successfully.",
+    "data": null
+  }
+  ```
